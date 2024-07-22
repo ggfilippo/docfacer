@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .results {
+            margin: auto;
+            margin-top: 20px;
+            max-width: 1000px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .results ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .results li {
+            margin-bottom: 10px;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .results li:last-child {
+            border-bottom: none;
+        }
+
+        .match {
+            color: green;
+            font-weight: bold;
+        }
+
+        .no-match {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h2>VALIDAÇÃO DE INFORMAÇÕES</h2>
+    <div class="results">
+        <ul>
+            <li>
+                <b>Nome: {{ resultados['nome']['valor'] }}</b><br>
+                Situação: {% if resultados['nome']['match'] %} 
+                    <span class="match">Validado ({{ resultados['nome']['score'] }}% de similaridade)</span>
+                {% else %}
+                    <span class="no-match">Não validado</span>
+                {% endif %}
+            </li>
+            <li>
+                <b>Data de Nascimento: {{ resultados['data_nascimento']['valor'] }}</b><br>
+                Situação: {% if resultados['data_nascimento']['match'] %} 
+                    <span class="match">Validado ({{ resultados['data_nascimento']['score'] }}% de similaridade)</span>
+                {% else %}
+                    <span class="no-match">Não validado</span>
+                {% endif %}
+            </li>
+            <li>
+                <b>CPF: {{ resultados['cpf']['valor'] }}</b><br>
+                Situação: {% if resultados['cpf']['match'] %} 
+                    <span class="match">Validado ({{ resultados['cpf']['score'] }}% de similaridade)</span>
+                {% else %}
+                    <span class="no-match">Não validado</span>
+                {% endif %}
+            </li>
+            <li>
+                <b>Nome da Mãe: {{ resultados['nome_mae']['valor'] }}</b><br>
+                Situação: {% if resultados['nome_mae']['match'] %} 
+                    <span class="match">Validado ({{ resultados['nome_mae']['score'] }}% de similaridade)</span>
+                {% else %}
+                    <span class="no-match">Não validado</span>
+                {% endif %}
+            </li>
+        </ul>
+        <button id="continue-button" style="display:none; width: 100%; margin: 0 auto;" onclick="window.location.href='/face_detection'">Continuar</button>
+    </div>
+    <script>
+        function formatDate(dateString) {
+            const [year, month, day] = dateString.split('-');
+            return `${day}/${month}/${year}`;
+        }
+
+        document.getElementById('formulario').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            var formData = new FormData(this);
+
+            var dataExpedicao = document.getElementById('dataExpedicao');
+            var dataNascimento = document.getElementById('dataNascimento');
+
+            if (dataExpedicao.value) {
+                formData.set('dataExpedicao', formatDate(dataExpedicao.value));
+            }
+            if (dataNascimento.value) {
+                formData.set('dataNascimento', formatDate(dataNascimento.value));
+            }
+
+            var loading = document.getElementById('loading');
+            var results = document.getElementById('results');
+            var darken = document.getElementById('darken');
+
+            loading.style.display = 'block';
+            darken.style.display = 'block'; // Exibe a tela escura
+
+            results.innerHTML = '';
+
+            fetch('/submit-your-form-handler', {
+                method: 'POST',
+                body: formData
+            }).then(response => response.text())
+            .then(data => {
+                loading.style.display = 'none';
+                darken.style.display = 'none'; // Oculta a tela escura
+                results.innerHTML = data;
+                
+                // Exibe o botão "Continuar" se a submissão do formulário foi bem-sucedida
+                document.getElementById('continue-button').style.display = 'block';
+                
+                // Rola suavemente para a seção de resultados
+                results.scrollIntoView({ behavior: 'smooth' });
+            }).catch(error => {
+                loading.style.display = 'none';
+                darken.style.display = 'none'; // Oculta a tela escura
+                results.innerHTML = 'Erro ao processar o OCR. Por favor, tente novamente.';
+                console.error('Error:', error);
+            });
+        });
+    </script>
+</body>
+</html>

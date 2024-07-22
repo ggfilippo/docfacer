@@ -1,0 +1,64 @@
+* {
+  margin: 5px 5px;
+  padding: 0px 5px;
+}
+
+body {
+  background-image: url("website background.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: #F0F3F4; /* Cor de fundo ajustada */
+}
+
+h1 {
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 1% 20%;
+  color: #2C3E50; /* Azul Profundo */
+}
+
+h3 {
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 1% 20%;
+  color: #2C3E50; /* Azul Profundo */
+}
+
+img {
+  width: 75%;
+}
+
+.mainFrame {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 95%;
+}
+
+.buttons {
+  display: flex;
+  justify-content: center;
+}
+
+.mybutton1,
+.mybutton2,
+.mybutton3 {
+  border-radius: 10px;
+  padding: 20px 40px;
+  font-size: 20px;
+  font-weight: bold;
+  background-color: #FFFFFF;
+  color: #34495E; /* Azul Cinza */
+  transition-duration: 0.4s;
+}
+
+.mybutton1:hover,
+.mybutton2:hover,
+.mybutton3:hover {
+  background-color: #8E44AD; /* Roxo */
+  color: white;
+}
