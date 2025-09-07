@@ -15,21 +15,9 @@ com as informações cadastradas e realizar prova de vida através da câmera.
 - Modelos YOLO para OCR e prova de vida disponíveis em `../models/ocr.pt` e
   `../models/large_v2_300.pt`
 
-## Bibliotecas principais
+## Dependências
 
-As dependências utilizadas no projeto incluem:
-
-- `flask`
-- `python-dotenv`
-- `pyrebase4`
-- `ultralytics`
-- `opencv-python`
-- `face_recognition`
-- `Pillow`
-- `requests`
-- `easyocr`
-- `numpy`
-- `rapidfuzz`
+As dependências do projeto estão listadas no arquivo `requirements.txt`.
 
 ## Instalação
 
@@ -40,7 +28,7 @@ source .venv/bin/activate  # Linux/macOS
 .venv\Scripts\activate    # Windows
 
 # 2. Instale as dependências
-pip install flask python-dotenv pyrebase4 ultralytics opencv-python face_recognition Pillow requests easyocr numpy rapidfuzz
+pip install -r requirements.txt
 
 # 3. Defina as variáveis de ambiente do Firebase em um arquivo `.env`
 cat <<EOT >> .env

@@ -1,0 +1,11 @@
+flask
+python-dotenv
+pyrebase4
+ultralytics
+opencv-python
+face_recognition
+Pillow
+requests
+easyocr
+numpy
+rapidfuzz
