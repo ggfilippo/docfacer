@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload do Documento - DocFacer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/cadastro_documento.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="form-card">
+            <h1>Envie o seu documento</h1>
+            <p>Arraste e solte ou clique na área abaixo para enviar seu documento (RG ou CNH).</p>
+    
+            <!-- Formulário -->
+            <form id="uploadForm" method="POST" enctype="multipart/form-data" action="/cadastro_documento">
+                <div id="drop-area">
+                    <label for="documento" id="label-drop">
+                        <input type="file" accept="image/*" id="documento" name="documento" hidden>
+                        <div id="img-view">
+                            <img id="img-preview" src="{{ url_for('static', filename='img/upload.png') }}" alt="Upload de Documento">
+                            <p id="upload-text">Arraste e solte ou clique aqui<br>para subir sua imagem</p>
+                            <span id="upload-hint">Frente e Verso do Documento</span>
+                        </div>
+                    </label>
+                </div>
+                <button type="submit" id="submit-btn" data-action="processar-documento">Continuar</button>
+            </form>
+        </div>
+    
+        <!-- Resultado da Validação -->
+        <div id="validation-result" class="validation-container {% if validation_result %}show{% else %}hide{% endif %}">
+            {% if validation_status == "success" %}
+                <h2 class="success-message">Validação Bem-Sucedida</h2>
+            {% elif validation_status == "warning" %}
+                <h2 class="warning-message">Validação Parcial</h2>
+            {% elif validation_status == "error" %}
+                <h2 class="error-message">Validação Falhou</h2>
+            {% endif %}
+            <p>{{ validation_result }}</p>
+        
+            {% if extracted_data %}
+                <h3>Dados Extraídos:</h3>
+                <p><strong>Nome:</strong> {{ extracted_data.get('nome', 'Não encontrado') }}</p>
+                <p><strong>Data de Nascimento:</strong> {{ extracted_data.get('data_nascimento', 'Não encontrado') }}</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        const dropArea = document.getElementById('drop-area');
+        const inputFile = document.getElementById('documento');
+        const imgPreview = document.getElementById('img-preview');
+        const uploadText = document.getElementById('upload-text');
+        const uploadHint = document.getElementById('upload-hint');
+        const submitBtn = document.getElementById('submit-btn');
+        const form = document.getElementById('uploadForm');
+
+        // Mostrar imagem no preview
+        const showImagePreview = (file) => {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                imgPreview.src = e.target.result;
+                imgPreview.style.display = 'block';
+                uploadText.style.display = 'none';
+                uploadHint.style.display = 'none';
+            };
+            reader.readAsDataURL(file);
+        };
+
+        // Lógica para arrastar e soltar imagem
+        dropArea.addEventListener('dragover', (e) => e.preventDefault());
+        dropArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            const files = e.dataTransfer.files;
+            if (files.length) {
+                inputFile.files = files;
+                showImagePreview(files[0]);
+            }
+        });
+
+        inputFile.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                showImagePreview(file);
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const submitBtn = document.getElementById('submit-btn');
+            const form = document.getElementById('uploadForm');
+
+            // Capturar o status da validação no carregamento da página
+            const validationStatus = "{{ validation_status }}";
+
+            // Ajustar o botão com base na validação
+            if (validationStatus === "success" || validationStatus === "warning" || validationStatus === "error") {
+                submitBtn.textContent = "Ir para Validação Facial";
+                submitBtn.dataset.action = "ir-para-validacao-facial";
+            }
+
+            submitBtn.addEventListener('click', (event) => {
+                const action = submitBtn.dataset.action;
+
+                if (action === "processar-documento") {
+                    // Comportamento padrão: adicionar animação e enviar formulário
+                    event.preventDefault(); // Evitar envio direto para aplicar efeito
+                    submitBtn.classList.add("processing");
+                    submitBtn.textContent = "Processando...";
+                    submitBtn.disabled = true;
+
+                    // Simular envio do formulário com um pequeno delay
+                    setTimeout(() => {
+                        form.submit();
+                    }, 500);
+                } else if (action === "ir-para-validacao-facial") {
+                    // Redirecionar para a rota de reconhecimento facial
+                    event.preventDefault();
+                    submitBtn.classList.add("processing");
+                    submitBtn.textContent = "Redirecionando...";
+                    submitBtn.disabled = true;
+
+                    setTimeout(() => {
+                        window.location.href = "/reconhecimento_facial";
+                    }, 500);
+                }
+            });
+        });
+
+    </script>
+</body>
+</html>

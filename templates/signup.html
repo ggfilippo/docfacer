@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro</title>
+    <link rel="stylesheet" href="static/css/login_signup.css">
+    <script src="https://kit.fontawesome.com/ac2342609e.js" crossorigin="anonymous"></script>   
+</head>
+<body>
+    <div class="container">
+        <h2>CADASTRO</h2>
+        <form action="/signup" method="POST">
+            <input type="text" name="email" placeholder="E-mail" required>
+            <i class="fa-regular fa-envelope iEmail"></i>
+            
+            <input type="password" id="password" name="password" placeholder="Senha" required>
+            <i class="fas fa-lock iPassword"></i>
+            <i id="togglepassword" class="fa-regular fa-eye password-icon"></i>
+
+            <input type="password" id="confirm-password" name="confirm_password" placeholder="Confirmar Senha" required>
+            <i class="fas fa-lock iPassword2"></i>
+            <i id="confirm-togglepassword" class="fa-regular fa-eye confirm-password-icon"></i>
+
+            <button type="submit">Criar</button>
+            {% if signup_error %}
+            <div class="alert-error">{{ signup_error }}</div>
+            {% endif %}
+            
+            {% if signup_success %}
+            <div class="alert-success">{{ signup_success }}</div>
+            {% endif %}
+        </form>
+    </div>
+
+    <script src="static/js/login_signup.js"></script>
+</body>
+</html>
